@@ -1,5 +1,4 @@
 import { useQuery } from '@tanstack/react-query'
-import React from 'react'
 
 export type User ={
     id : number,
@@ -48,8 +47,8 @@ function Users() {
     if(error) return <h5>{error.message}</h5>
   return (
     <div>
-        {data!.users.map(u => (
-            <div>{u.name}</div>
+        {data!.users.map((u,key )=> (
+            <div key={key}>{u.name}</div>
         ))}
     </div>
   )

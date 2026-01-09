@@ -17,7 +17,7 @@ const schema = buildSchema(`
 
       type Mutation {
         createUser(name : String!,age : Int!) : User!,
-        deleteUser : Boolean
+        deleteUser(id : ID!) : Boolean
       }
     `)
 
@@ -26,7 +26,7 @@ const schema = buildSchema(`
       name : string,
       age : number
     }
-    const users : User[] = [
+    let users : User[] = [
         {id : 1,name : "vinesh",age : 25},
         {id : 2,name : "dinesh",age : 26},
         {id : 3,name : "ainesh",age : 24},
@@ -34,15 +34,24 @@ const schema = buildSchema(`
 
     const resolver = {
         users : () : User[]=> users,
-        getUserById : ({id} :{id : number}) : User | undefined => users.find(user => user.id===id),
+        getUserById : ({id} :{id : number}) : User | undefined => users.find(user => user.id==id),
         createUser : ({name,age} : {name : string,age:number}) : User => {
           const newUser : User = {
-            id : 4,
+            id : users.length+1,
             name,
             age
           }
           users.push(newUser);
           return newUser;
+        },
+        deleteUser : ({id} : {id : number}) => {
+          const user = users.find(user => user.id == id);
+          if(user === undefined){
+            throw new Error("No user found ");
+          }
+          const listOfUsers = users.filter(u => u.id!=id);
+          users = listOfUsers;
+          return true;
         }
     }
 
