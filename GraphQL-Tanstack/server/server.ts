@@ -22,7 +22,7 @@ const schema = buildSchema(`
         IsMarried : Boolean
       }
       type Mutation {
-        createUser(body : CreateUseInput) : User!,
+        createUser(name:String!,age:Int!,IsMarried:Boolean!) : User!,
         deleteUser(id : ID!) : Boolean
       }
     `)
@@ -50,9 +50,9 @@ const schema = buildSchema(`
           console.log(snap.docs.map((doc : any) => ({id : doc.id,...doc.data()})))
           return snap.docs.map((doc:any) => ({
             id : doc.id,
-            name : doc.data().body.name,
-            age : doc.data().body.age,
-            IsMarried : doc.data().body.IsMarried
+            name : doc.data().name,
+            age : doc.data().age,
+            IsMarried : doc.data().IsMarried
           }))
         },
         getUserById : async ({id} :{id : number}) : Promise<User|undefined> => {
@@ -62,8 +62,8 @@ const schema = buildSchema(`
             ...snapshot.data() as User
           }
         },
-        createUser : async ({body} : {body : CreateUseInput}) : Promise<User> => {
-          const data = await db.collection("users").add({body});
+        createUser : async (body : {name:string,age:number,IsMarried:boolean}) : Promise<User> => {
+          const data = await db.collection("users").add(body);
           return {...body,id : data.id};
         },
         deleteUser : async ({id} : {id : number}) : Promise<boolean> => {
@@ -84,7 +84,7 @@ const schema = buildSchema(`
             graphiql : true
         })
     )
-
+    app.use(express.json())
     app.listen(4000,() => {
       console.log("GraphQl Server running on http://localhost:4000/graphql");
     });
