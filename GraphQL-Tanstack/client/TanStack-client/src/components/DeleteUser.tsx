@@ -15,8 +15,8 @@ const deleteQuery = `
 function DeleteUser() {
     const queryClient = useQueryClient();
     const [id,setId] = useState<string>("");
-    const {mutate, error, isPending} = useMutation<DeleteUserResponse,Error,{id : number}>({
-        mutationFn : (variables : {id : number}) => fetchGraphql<DeleteUserResponse>(deleteQuery,variables),
+    const {mutate, error, isPending} = useMutation<DeleteUserResponse,Error,{id : string}>({
+        mutationFn : (variables : {id : string}) => fetchGraphql<DeleteUserResponse>(deleteQuery,variables),
         onSuccess : () => queryClient.invalidateQueries({queryKey : ["users"]}) 
     })
     if(error)
@@ -26,10 +26,10 @@ function DeleteUser() {
   return (
     <div>
         <h3>Delete User</h3>
-        <input type="number" placeholder="Enter user id" value={id}
+        <input placeholder="Enter user id" value={id}
         onChange={(e) => setId(e.target.value)}
         />
-        <button onClick={() =>{setId(""); mutate({id: Number(id)})}}>Delete</button>
+        <button onClick={() =>{setId(""); mutate({id})}}>Delete</button>
     </div>
   )
 }
