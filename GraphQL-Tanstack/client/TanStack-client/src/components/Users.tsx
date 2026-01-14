@@ -3,7 +3,8 @@ import { useQuery } from '@tanstack/react-query'
 export type User ={
     id : number,
     name : string,
-    age : number
+    age : number,
+    IsMarried : boolean
 }
 
 type UserQueryResult = {
@@ -15,7 +16,7 @@ const User_query = `
         users{
             id,
             name,
-            age
+            age,
         }
     }
 `
